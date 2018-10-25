@@ -35,7 +35,7 @@ int		checkFile(char *name, t_flags *flags)
 		return (0);
 }
 
-void	readArgs(t_flags *flags, t_algo *algo, int argc, char **argv)
+int 	checkFirstArgs(char **argv, int argc, t_flags *flags, t_algo *algo)
 {
 	int i;
 
@@ -48,6 +48,14 @@ void	readArgs(t_flags *flags, t_algo *algo, int argc, char **argv)
 	if ((flags->algInd = findAlgo(algo, flags, argv[i])) == -1)
 		algoError(algo, argv[i]);
 	i++;
+	return (i);
+}
+
+void	readArgs(t_flags *flags, t_algo *algo, int argc, char **argv)
+{
+	int i;
+
+	i = checkFirstArgs(argv, argc, flags, algo);
 	while (i < argc)
 	{
 		if (i == 1 && (flags->algInd = findAlgo(algo, flags, argv[i])) == -1)
