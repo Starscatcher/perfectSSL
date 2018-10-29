@@ -44,12 +44,18 @@ void	readArgs(t_flags *flags, t_algo *algo, int argc, char **argv)
 		i = 0;
 	}
 	if ((flags->algInd = findAlgo(algo, flags, argv[i])) == -1)
+	{
 		algoError(algo, argv[i]);
+		return ;
+	}
 	i++;
 	while (i < argc)
 	{
 		if (!isFlag(flags, argv[i]))
+		{
 			optionError(argv[i]);
+			break ;
+		}
 		else
 		{
 			if (flags->s && argv[i + 1])
@@ -60,7 +66,10 @@ void	readArgs(t_flags *flags, t_algo *algo, int argc, char **argv)
 			else if (flags->p)
 				findFunc(readFd(0), flags);
 			else if (!checkFile(argv[i], flags))
+			{
 				fileError(argv[i], flags);
+				break ;
+			}
 		}
 		i++;
 	}
