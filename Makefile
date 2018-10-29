@@ -2,19 +2,23 @@ NAME = ft_ssl
 
 SRC = 	./MD5.c \
       	./SHA256.c \
-      	./WHIRLPOOL.c \
       	./algoStruct.c \
       	./flagsStruct.c \
       	./alignment.c \
       	./bitsOper.c \
       	./findAlgo.c \
-      	./findHashFunc.c \
+      	./findFunc.c \
       	./fromStdin.c \
       	./main.c \
       	./sslSplit.c \
       	./sslError.c \
       	./readFd.c \
-      	./readArgs.c
+      	./readArgs.c \
+      	./mdStruct.c \
+      	./SHA512.c \
+      	./SHA224.c \
+      	./SHA384.c \
+      	./BASE64.c
 
 MLIB = make -C libftprintf
 

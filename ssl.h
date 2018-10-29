@@ -6,7 +6,7 @@ typedef unsigned int	t_uint;
 typedef unsigned char	t_uchar;
 typedef unsigned long long int	t_ullint;
 
-#define	ALGO_NUM 3
+#define	ALGO_NUM 6
 
 # define BUFF_SIZE 1
 
@@ -31,6 +31,9 @@ typedef struct	s_flags
 	int q;
 	int r;
 	int s;
+
+	int d;
+
 	char *algName;
 	int algInd;
 	int file;
@@ -57,6 +60,8 @@ t_algo	*createAlgoStruct(char *allAlgs);
 void	delAlgoStruct(t_algo *algo);
 t_flags	*createFlagsStruct(void);
 void	delFlagsStruct(t_flags *flags);
+t_md	*createMdStruct(t_md *lst);
+void	delMdStruct(t_md *md);
 
 // read args
 void	readArgs(t_flags *flags, t_algo *algo, int argc, char **argv);
@@ -72,14 +77,15 @@ void	usage();
 char	*readFd(int fd);
 
 // searching right algorithm
-void	findHashFunc(char *input,  t_flags *flags);
+void	findFunc(char *input,  t_flags *flags);
 
 // bits operations
-t_uint	fBit(t_uint x, t_uint y, t_uint z);
-t_uint	gBit(t_uint x, t_uint y, t_uint z);
-t_uint	hBit(t_uint x, t_uint y, t_uint z);
-t_uint	lBit(t_uint x, t_uint y, t_uint z);
-t_uint	f_rotr(t_uint a, int s);
+t_uint		fBit(t_uint x, t_uint y, t_uint z);
+t_uint		gBit(t_uint x, t_uint y, t_uint z);
+t_uint		hBit(t_uint x, t_uint y, t_uint z);
+t_uint		lBit(t_uint x, t_uint y, t_uint z);
+t_uint		fRotr(t_uint a, int s);
+t_ullint	fRotr512(t_ullint a, int s);
 
 // alignment for SHA256 & MD5
 t_uchar	*ft_alignment(ssize_t size, char *input);
@@ -89,8 +95,25 @@ ssize_t	ft_find_size(ssize_t len);
 char	**fromStdin(int *argc, t_flags *flags);
 char	**sslSplit(char *arr, char elem);
 
+// SHA512 384
+t_uchar			*alignment512(t_ullint size, char *input);
+t_ullint		findSize512(t_ullint len);
+t_ullint		*char2int512(t_uchar *bef, ssize_t news, t_ullint s);
+t_ullint		*writeLen512(t_ullint len, t_ullint *data, t_ullint i);
+t_ullint		*alg512(t_ullint s, t_ullint *a, t_ullint *hash);
+
+// SHA 256 224
+t_uint	*char2int256(t_uchar *bef, ssize_t newsize, ssize_t size);
+t_uint	*writeLen256(ssize_t len, t_uint *data, ssize_t i);
+t_uint	*algSHA256(ssize_t size, t_uint *arr, t_uint *hash);
+
 // algo
 void	SHA256(char *input, t_flags *flags);
 void	MD5(char *input, t_flags *flags);
+void	SHA512(char *input, t_flags *flags);
+void	SHA384(char *input, t_flags *flags);
+void	SHA224(char *input, t_flags *flags);
+
+void	BASE64(char *input, t_flags *flags);
 
 #endif

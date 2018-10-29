@@ -84,6 +84,7 @@ void				ft_putnbr_fd(int n, int fd);
 char				*ft_strjoin(char const *s1, char const *s2);
 int					ft_strnequ(char const *s1, char const *s2, size_t n);
 int					ft_strequ(char const *s1, char const *s2);
+void				ft_print_upper(char *arr);
 
 typedef struct		s_list
 {

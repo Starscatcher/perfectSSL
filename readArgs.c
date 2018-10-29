@@ -11,8 +11,6 @@ int		isFlag(t_flags *flags, char *arg)
 	else if (!strcmp("r", arg))
 		flags->r++;
 	else if (arg[0] == '-')
-		return (1);
-	else
 		return (0);
 	return (1);
 }
@@ -27,7 +25,7 @@ int		checkFile(char *name, t_flags *flags)
 	{
 		flags->file++;
 		file = readFd(fd);
-		findHashFunc(file, flags);
+		findFunc(file, flags);
 		flags->file = 0;
 		return (1);
 	}
@@ -35,7 +33,7 @@ int		checkFile(char *name, t_flags *flags)
 		return (0);
 }
 
-int 	checkFirstArgs(char **argv, int argc, t_flags *flags, t_algo *algo)
+void	readArgs(t_flags *flags, t_algo *algo, int argc, char **argv)
 {
 	int i;
 
@@ -48,32 +46,19 @@ int 	checkFirstArgs(char **argv, int argc, t_flags *flags, t_algo *algo)
 	if ((flags->algInd = findAlgo(algo, flags, argv[i])) == -1)
 		algoError(algo, argv[i]);
 	i++;
-	return (i);
-}
-
-void	readArgs(t_flags *flags, t_algo *algo, int argc, char **argv)
-{
-	int i;
-
-	i = checkFirstArgs(argv, argc, flags, algo);
 	while (i < argc)
 	{
-		if (i == 1 && (flags->algInd = findAlgo(algo, flags, argv[i])) == -1)
-		{
-			algoError(algo, argv[i]);
-			break;
-		}
-		else if (!isFlag(flags, argv[i]))
+		if (!isFlag(flags, argv[i]))
 			optionError(argv[i]);
 		else
 		{
 			if (flags->s && argv[i + 1])
 			{
 				i++;
-				findHashFunc(argv[i], flags);
+				findFunc(argv[i], flags);
 			}
 			else if (flags->p)
-				findHashFunc(readFd(0), flags);
+				findFunc(readFd(0), flags);
 			else if (!checkFile(argv[i], flags))
 				fileError(argv[i], flags);
 		}

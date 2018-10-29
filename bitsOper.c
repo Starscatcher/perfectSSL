@@ -32,7 +32,13 @@ t_uint	lBit(t_uint x, t_uint y, t_uint z)
 	return (res);
 }
 
-t_uint	f_rotr(t_uint a, int s)
+t_ullint	fRotr512(t_ullint a, int s)
+{
+	a = a >> s | a << (64 - s);
+	return (a);
+}
+
+t_uint	fRotr(t_uint a, int s)
 {
 	a = a >> s | a << (32 - s);
 	return (a);

@@ -1,6 +1,6 @@
 #include "ssl.h"
 
-t_uint		*ft_copy_hash(t_uint *hash)
+t_uint		*hashCpy256(t_uint *hash)
 {
 	int		i;
 	t_uint	*tmp;
@@ -15,7 +15,9 @@ t_uint		*ft_copy_hash(t_uint *hash)
 	return (tmp);
 }
 
-t_uint	*ft_generation_words(t_uint *w, t_uint *arr)
+// algo
+
+t_uint	*generationWords256(t_uint *w, t_uint *arr)
 {
 	int		i;
 	t_uint	a;
@@ -30,15 +32,15 @@ t_uint	*ft_generation_words(t_uint *w, t_uint *arr)
 	}
 	while (i < 64)
 	{
-		a = (f_rotr(w[i - 15], 7) ^ f_rotr(w[i - 15], 18) ^ (w[i - 15] >> 3));
-		b = (f_rotr(w[i - 2], 17) ^ f_rotr(w[i - 2], 19) ^ (w[i - 2] >> 10));
+		a = (fRotr(w[i - 15], 7) ^ fRotr(w[i - 15], 18) ^ (w[i - 15] >> 3));
+		b = (fRotr(w[i - 2], 17) ^ fRotr(w[i - 2], 19) ^ (w[i - 2] >> 10));
 		w[i] = w[i - 16] + a + w[i - 7] + b;
 		i++;
 	}
 	return (w);
 }
 
-t_uint	*ft_hash_plus_newhash(t_uint *hash, t_uint *tmp)
+t_uint	*hashSum256(t_uint *hash, t_uint *tmp)
 {
 	hash[A] = hash[A] + tmp[A];
 	hash[B] = hash[B] + tmp[B];
@@ -51,7 +53,7 @@ t_uint	*ft_hash_plus_newhash(t_uint *hash, t_uint *tmp)
 	return (hash);
 }
 
-t_uint	*ft_formula(t_uint *fo, t_uint *tmp, int i, t_uint *words)
+t_uint	*formula256(t_uint *fo, t_uint *tmp, int i, t_uint *words)
 {
 	unsigned const int k[] = {
 			0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5, 0x3956C25B,
@@ -69,16 +71,16 @@ t_uint	*ft_formula(t_uint *fo, t_uint *tmp, int i, t_uint *words)
 			0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
 	};
 
-	fo[E0] = (f_rotr(tmp[A], 2) ^ f_rotr(tmp[A], 13) ^ f_rotr(tmp[A], 22));
+	fo[E0] = (fRotr(tmp[A], 2) ^ fRotr(tmp[A], 13) ^ fRotr(tmp[A], 22));
 	fo[MA] = (tmp[A] & tmp[B]) ^ (tmp[A] & tmp[C]) ^ (tmp[B] & tmp[C]);
 	fo[T2] = fo[E0] + fo[MA];
-	fo[E1] = (f_rotr(tmp[E], 6) ^ f_rotr(tmp[E], 11) ^ f_rotr(tmp[E], 25));
+	fo[E1] = (fRotr(tmp[E], 6) ^ fRotr(tmp[E], 11) ^ fRotr(tmp[E], 25));
 	fo[CH] = (tmp[E] & tmp[F]) ^ ((~tmp[E]) & tmp[G]);
 	fo[T1] = tmp[H] + fo[E1] + fo[CH] + k[i] + words[i];
 	return (fo);
 }
 
-t_uint	*ft_round(t_uint *tmp, t_uint *words)
+t_uint	*round256(t_uint *tmp, t_uint *words)
 {
 	int		i;
 	t_uint	*fo;
@@ -87,7 +89,7 @@ t_uint	*ft_round(t_uint *tmp, t_uint *words)
 	i = 0;
 	while (i < 64)
 	{
-		fo = ft_formula(fo, tmp, i, words);
+		fo = formula256(fo, tmp, i, words);
 		tmp[H] = tmp[G];
 		tmp[G] = tmp[F];
 		tmp[F] = tmp[E];
@@ -102,7 +104,7 @@ t_uint	*ft_round(t_uint *tmp, t_uint *words)
 	return (tmp);
 }
 
-t_uint	*ft_alg_sha256(ssize_t size, t_uint *arr, t_uint *hash)
+t_uint	*algSHA256(ssize_t size, t_uint *arr, t_uint *hash)
 {
 	int		j;
 	t_uint	*tmp;
@@ -113,10 +115,10 @@ t_uint	*ft_alg_sha256(ssize_t size, t_uint *arr, t_uint *hash)
 	j = 0;
 	while (j < size)
 	{
-		words = ft_generation_words(NULL, arr + g);
-		tmp = ft_copy_hash(hash);
-		tmp = ft_round(tmp, words);
-		hash = ft_hash_plus_newhash(hash, tmp);
+		words = generationWords256(NULL, arr + g);
+		tmp = hashCpy256(hash);
+		tmp = round256(tmp, words);
+		hash = hashSum256(hash, tmp);
 		g += 16;
 		j += 64;
 		free(tmp);
@@ -126,7 +128,9 @@ t_uint	*ft_alg_sha256(ssize_t size, t_uint *arr, t_uint *hash)
 	return (hash);
 }
 
-t_uint		*ft_initialize_buff_sha256(t_uint *hash)
+// end
+
+t_uint		*initializeBuff256(t_uint *hash)
 {
 	hash = (t_uint*)malloc(sizeof(t_uint) * 8);
 	hash[0] = 0x6A09E667;
@@ -140,7 +144,7 @@ t_uint		*ft_initialize_buff_sha256(t_uint *hash)
 	return (hash);
 }
 
-t_uint	*ft_char2int_sha256(t_uchar *bef, ssize_t newsize, ssize_t size)
+t_uint	*char2int256(t_uchar *bef, ssize_t newsize, ssize_t size)
 {
 	t_uint	*aft;
 	int		i;
@@ -163,7 +167,7 @@ t_uint	*ft_char2int_sha256(t_uchar *bef, ssize_t newsize, ssize_t size)
 	return (aft);
 }
 
-t_uint	*ft_write_len_sha256(ssize_t len, t_uint *data, ssize_t i)
+t_uint	*writeLen256(ssize_t len, t_uint *data, ssize_t i)
 {
 	while (len)
 	{
@@ -189,10 +193,10 @@ t_uint	*hashSHA256(char *input, size_t len)
 
 	size = ft_find_size(len);
 	newinp = ft_alignment(size, input);
-	hash = ft_initialize_buff_sha256(NULL);
-	arr = ft_char2int_sha256(newinp, size / 4, size);
-	arr = ft_write_len_sha256((len * 8), arr, ((size / 4) - 1));
-	return (ft_alg_sha256(size, arr, hash));
+	hash = initializeBuff256(NULL);
+	arr = char2int256(newinp, size / 4, size);
+	arr = writeLen256((len * 8), arr, ((size / 4) - 1));
+	return (algSHA256(size, arr, hash));
 }
 
 void	printHash256(t_uint *hash)

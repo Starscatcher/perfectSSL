@@ -9,6 +9,7 @@ t_flags	*createFlagsStruct(void)
 	flags->q = 0;
 	flags->r = 0;
 	flags->s = 0;
+	flags->d = 0;
 	flags->algName = NULL;
 	flags->algInd = -1;
 	flags->file = 0;
@@ -19,5 +20,5 @@ t_flags	*createFlagsStruct(void)
 void	delFlagsStruct(t_flags *flags)
 {
 	ft_strdel(&flags->algName);
-	free(&flags);
+	free(flags);
 }
