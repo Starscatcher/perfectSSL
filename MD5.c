@@ -119,15 +119,15 @@ void		initializeBuffMD5(t_md *lst)
 
 	head = lst;
 	lst->a = 0x67452301;
-	hash = createMdStruct(NULL);
+	hash = createMdStruct();
 	lst->next = hash;
 	lst = lst->next;
 	lst->a = 0xEFCDAB89;
-	hash = createMdStruct(NULL);
+	hash = createMdStruct();
 	lst->next = hash;
 	lst = lst->next;
 	lst->a = 0x98BADCFE;
-	hash = createMdStruct(NULL);
+	hash = createMdStruct();
 	lst->next = hash;
 	lst = lst->next;
 	lst->a = 0x10325476;
@@ -192,7 +192,7 @@ void	printHashMD5(t_md *hash)
 	delMdStruct(head);
 }
 
-t_md	*hashMD5(char *input, size_t len)
+void	MD5(char *input, size_t len)
 {
 	ssize_t	size;
 	t_uchar	*newinp;
@@ -201,26 +201,10 @@ t_md	*hashMD5(char *input, size_t len)
 
 	size = ft_find_size(len);
 	newinp = ft_alignment(size, input);
-	hash = createMdStruct(NULL);
+	hash = createMdStruct();
 	initializeBuffMD5(hash);
 	arr = char2intMD5(newinp, size / 4, size);
 	arr = writeLenMD5((len * 8), arr, ((size / 4) - 2));
 	algMD5(hash, size, arr);
-	return (hash);
-}
-
-void	MD5(char *input, t_flags *flags)
-{
-	size_t len;
-
-	len = ft_strlen(input);
-	if ((flags->p || flags->s ) && !flags->q && !flags->file && !flags->r)
-		ft_printf("%s ( %s ) = ", flags->algName, input);
-	printHashMD5(hashMD5(input, len));
-	if (flags->r && !flags->q && !flags->file)
-		ft_printf(" \"%s\"\n", input);
-	else if (flags->file)
-		ft_printf(" %s\n", input);
-	else
-		ft_printf("\n");
+	printHashMD5(hash);
 }

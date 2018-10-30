@@ -25,4 +25,3 @@ void	ft_print_upper(char *arr)
 		i++;
 	}
 }
-

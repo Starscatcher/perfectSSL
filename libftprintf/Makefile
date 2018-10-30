@@ -35,7 +35,7 @@ LIB_SRC = 	ft_atoi.o ft_bzero.o ft_isalnum.o ft_isalpha.o ft_isascii.o \
 			ft_strtrim.o ft_swap.o ft_tolower.o ft_toupper.o get_next_line.o \
 			ft_del_doubleint.o ft_del_doublestr.o ft_intrealloc.o \
 			ft_int_reverse.o ft_intcpy.o ft_intdel.o ft_reallcat.o \
-			ft_return_smaller.o
+			ft_return_smaller.o ft_print_upper.o
 
 PRF_SRC = 	ft_charmod.o ft_create_struct.o ft_float.o ft_intmod.o ft_itoa_base.o \
 			ft_modify.o ft_print_unicode.o ft_printf.o ft_read_args.o ft_read_flags.o \

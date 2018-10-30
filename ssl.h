@@ -6,7 +6,9 @@ typedef unsigned int	t_uint;
 typedef unsigned char	t_uchar;
 typedef unsigned long long int	t_ullint;
 
-#define	ALGO_NUM 6
+#define	ALGO_NUM 7
+#define	HASH_NUM 5
+#define	CIPHER_NUM 1 * 2
 
 # define BUFF_SIZE 1
 
@@ -33,11 +35,17 @@ typedef struct	s_flags
 	int s;
 
 	int d;
+	int e;
+	int i;
+	int o;
 
 	char *algName;
 	int algInd;
 	int file;
 	int stdin;
+
+	int hash;
+	int cipher;
 }				t_flags;
 
 typedef	struct	s_algo
@@ -53,14 +61,14 @@ typedef struct	s_md
   struct s_md		*next;
 }				t_md;
 
-typedef void	(*t_alg)(char *, t_flags *);
+typedef void	(*t_alg)(char *, size_t);
 
 // create/delete struct
 t_algo	*createAlgoStruct(char *allAlgs);
 void	delAlgoStruct(t_algo *algo);
 t_flags	*createFlagsStruct(void);
 void	delFlagsStruct(t_flags *flags);
-t_md	*createMdStruct(t_md *lst);
+t_md	*createMdStruct(void);
 void	delMdStruct(t_md *md);
 
 // read args
@@ -108,12 +116,13 @@ t_uint	*writeLen256(ssize_t len, t_uint *data, ssize_t i);
 t_uint	*algSHA256(ssize_t size, t_uint *arr, t_uint *hash);
 
 // algo
-void	SHA256(char *input, t_flags *flags);
-void	MD5(char *input, t_flags *flags);
-void	SHA512(char *input, t_flags *flags);
-void	SHA384(char *input, t_flags *flags);
-void	SHA224(char *input, t_flags *flags);
+void	SHA256(char *input, size_t len);
+void	MD5(char *input, size_t len);
+void	SHA512(char *input, size_t len);
+void	SHA384(char *input, size_t len);
+void	SHA224(char *input, size_t len);
 
-void	BASE64(char *input, t_flags *flags);
+void	BASE64(char *input, size_t len);
+void 	decBASE64(char *input, size_t len);
 
 #endif

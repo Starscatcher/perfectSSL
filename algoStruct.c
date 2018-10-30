@@ -13,7 +13,7 @@ t_algo	*createAlgoStruct(char *allAlgs)
 	i = 0;
 	while (i < ALGO_NUM)
 	{
-		algo->name = ft_strdup(allAlgsCpy[i]);
+		algo->name = allAlgsCpy[i];
 		i++;
 		if (i == ALGO_NUM)
 			algo->next = NULL;
@@ -21,6 +21,7 @@ t_algo	*createAlgoStruct(char *allAlgs)
 			algo->next = (t_algo*)(malloc(sizeof(t_algo)));
 		algo = algo->next;
 	}
+	free(allAlgsCpy);
 	return (head);
 }
 

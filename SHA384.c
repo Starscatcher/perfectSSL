@@ -27,7 +27,7 @@ void	printHash384(t_ullint *hash)
 	free(hash);
 }
 
-t_ullint	*hash384(char *input, size_t len)
+void	SHA384(char *input, size_t len)
 {
 	t_ullint	size;
 	t_uchar		*newinp;
@@ -40,21 +40,5 @@ t_ullint	*hash384(char *input, size_t len)
 	hash = char2int512(newinp, (ssize_t)size / 8, size);
 	hash = writeLen512(len * 8, hash, (size / 8) - 1);
 	hash = alg512(size, hash, res);
-	return (hash);
-}
-
-void	SHA384(char *input, t_flags *flags)
-{
-	size_t len;
-
-	len = ft_strlen(input);
-	if ((flags->p || flags->s ) && !flags->q && !flags->file && !flags->r)
-		ft_printf("%s ( %s ) = ", flags->algName, input);
-	printHash384(hash384(input, len));
-	if (flags->r && !flags->q && !flags->file)
-		ft_printf(" \"%s\"\n", input);
-	else if (flags->file)
-		ft_printf(" %s\n", input);
-	else
-		ft_printf("\n");
+	printHash384(hash);
 }

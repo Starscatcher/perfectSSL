@@ -2,14 +2,22 @@
 
 int		isFlag(t_flags *flags, char *arg)
 {
-	if (!strcmp("-p", arg))
+	if (flags->hash && !strcmp("-p", arg)) // hash
 		flags->p++;
-	else if (!strcmp("-s", arg))
+	else if (flags->hash && !strcmp("-s", arg))
 		flags->s++;
-	else if (!strcmp("-q", arg))
+	else if (flags->hash && !strcmp("-q", arg))
 		flags->q++;
-	else if (!strcmp("r", arg))
+	else if (flags->hash && !strcmp("-r", arg))
 		flags->r++;
+	else if (flags->cipher && !strcmp("-d", arg)) // cipher
+		flags->d++;
+	else if (flags->cipher > 4 && !strcmp("-e", arg))
+		flags->e++;
+	else if (flags->cipher > 4 && !strcmp("-i", arg))
+		flags->i++;
+	else if (flags->cipher > 4 && !strcmp("-o", arg))
+		flags->o++;
 	else if (arg[0] == '-')
 		return (0);
 	return (1);
@@ -33,10 +41,35 @@ int		checkFile(char *name, t_flags *flags)
 		return (0);
 }
 
+int 	hashRead(t_flags *flags, char **argv, int *i)
+{
+	if (flags->s && argv[*i + 1])
+	{
+		++*i;
+		findFunc(argv[*i], flags);
+	}
+	else if (flags->p)
+		findFunc(readFd(0), flags);
+	else if (!isFlag(flags, argv[*i]) && !checkFile(argv[*i], flags))
+	{
+		fileError(argv[*i], flags);
+		return (0);
+	}
+	return (1);
+}
+
+int 	cipherRead(t_flags *flags)
+{
+	findFunc(readFd(0), flags);
+	return (1);
+}
+
 void	readArgs(t_flags *flags, t_algo *algo, int argc, char **argv)
 {
 	int i;
+	int first;
 
+	first = 0;
 	i = 1;
 	if (argc == 1)
 	{
@@ -49,29 +82,22 @@ void	readArgs(t_flags *flags, t_algo *algo, int argc, char **argv)
 		return ;
 	}
 	i++;
-	while (i < argc)
+	while (i < argc || !first)
 	{
-		if (!isFlag(flags, argv[i]))
+		if (i < argc && !isFlag(flags, argv[i]))
 		{
 			optionError(argv[i]);
 			break ;
 		}
 		else
 		{
-			if (flags->s && argv[i + 1])
-			{
-				i++;
-				findFunc(argv[i], flags);
-			}
-			else if (flags->p)
-				findFunc(readFd(0), flags);
-			else if (!checkFile(argv[i], flags))
-			{
-				fileError(argv[i], flags);
+			if (flags->hash && !hashRead(flags, argv, &i))
 				break ;
-			}
+			else if (flags->cipher && !cipherRead(flags))
+				break ;
 		}
 		i++;
+		first++;
 	}
 	if (flags->stdin)
 		ft_del_doublestr(&argv);

@@ -1,7 +1,8 @@
 #include "ssl.h"
 
-t_md	*createMdStruct(t_md *lst)
+t_md	*createMdStruct(void)
 {
+	t_md	*lst;
 	lst = (t_md*)malloc(sizeof(t_md));
 	lst->a = 0;
 	lst->aa = 0;
