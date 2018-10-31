@@ -8,7 +8,7 @@ typedef unsigned long long int	t_ullint;
 
 #define	ALGO_NUM 7
 #define	HASH_NUM 5
-#define	CIPHER_NUM 1 * 2
+#define	CIPHER_NUM 1 * 2 // (encode & decode)
 
 # define BUFF_SIZE 1
 
@@ -29,21 +29,18 @@ typedef unsigned long long int	t_ullint;
 
 typedef struct	s_flags
 {
-	int p;
+	int p; // hash
 	int q;
 	int r;
 	int s;
-
-	int d;
+	int d; // cipher
 	int e;
 	int i;
 	int o;
-
-	char *algName;
+	char *algName; // other
 	int algInd;
 	int file;
 	int stdin;
-
 	int hash;
 	int cipher;
 }				t_flags;
@@ -115,13 +112,14 @@ t_uint	*char2int256(t_uchar *bef, ssize_t newsize, ssize_t size);
 t_uint	*writeLen256(ssize_t len, t_uint *data, ssize_t i);
 t_uint	*algSHA256(ssize_t size, t_uint *arr, t_uint *hash);
 
-// algo
+// hash algo
 void	SHA256(char *input, size_t len);
 void	MD5(char *input, size_t len);
 void	SHA512(char *input, size_t len);
 void	SHA384(char *input, size_t len);
 void	SHA224(char *input, size_t len);
 
+// cipher algo
 void	BASE64(char *input, size_t len);
 void 	decBASE64(char *input, size_t len);
 

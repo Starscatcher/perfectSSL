@@ -11,4 +11,5 @@ int main(int argc, char **argv)
 	readArgs(flags, algo, argc, argv);
 	delAlgoStruct(algo);
 	delFlagsStruct(flags);
+	//system("leaks ft_ssl");
 }

@@ -20,6 +20,8 @@ int		isFlag(t_flags *flags, char *arg)
 		flags->o++;
 	else if (arg[0] == '-')
 		return (0);
+	else if (arg[0] != '-')
+		return (-1);
 	return (1);
 }
 
@@ -34,7 +36,6 @@ int		checkFile(char *name, t_flags *flags)
 		flags->file++;
 		file = readFd(fd);
 		findFunc(file, flags);
-		flags->file = 0;
 		return (1);
 	}
 	else
@@ -43,18 +44,17 @@ int		checkFile(char *name, t_flags *flags)
 
 int 	hashRead(t_flags *flags, char **argv, int *i)
 {
-	if (flags->s && argv[*i + 1])
+	if (!argv[*i])
+		findFunc(readFd(0), flags);
+	else if (((isFlag(flags, argv[*i])) == -1 || flags->file) && !checkFile(argv[*i], flags))
+		fileError(argv[*i], flags);
+	else if (!flags->file && flags->s && argv[*i + 1])
 	{
 		++*i;
 		findFunc(argv[*i], flags);
 	}
-	else if (flags->p)
+	else if (!flags->file && flags->p)
 		findFunc(readFd(0), flags);
-	else if (!isFlag(flags, argv[*i]) && !checkFile(argv[*i], flags))
-	{
-		fileError(argv[*i], flags);
-		return (0);
-	}
 	return (1);
 }
 
@@ -89,13 +89,10 @@ void	readArgs(t_flags *flags, t_algo *algo, int argc, char **argv)
 			optionError(argv[i]);
 			break ;
 		}
-		else
-		{
-			if (flags->hash && !hashRead(flags, argv, &i))
-				break ;
-			else if (flags->cipher && !cipherRead(flags))
-				break ;
-		}
+		if (flags->hash)
+			hashRead(flags, argv, &i);
+		else if (flags->cipher)
+			cipherRead(flags);
 		i++;
 		first++;
 	}
